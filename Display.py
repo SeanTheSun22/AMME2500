@@ -48,17 +48,21 @@ class CartAnimation(animation.TimedAnimation):
         
 
 class CartAndPendulumAnimation(CartAnimation):
-    def __init__(self, t: list, x: list, theta: list, cartParameters: dict) -> None:
+    def __init__(self, cartParameters: dict, t: list, x: list, theta1: list, theta2: list=None) -> None:
         super().__init__(t, x, cartParameters)
         
-        self.theta = theta
+        self.theta = [theta1, theta2]
         self.pendulumLength = cartParameters["L"]
+        self.dof = cartParameters["dof"]
         
         self.ax.set_ylim(-self.pendulumLength - self.screenHeightBuffer, self.cartHeight + self.screenHeightBuffer)
 
         self.ax.set_aspect('equal', adjustable='box')
-
-        self.pendulum, = self.ax.plot([], [], color='black', lw=2)
+        
+        self.pendulums = []
+        for i in range(self.dof - 1):
+            pendulum, = self.ax.plot([], [], color='black', lw=2)
+            self.pendulums.append(pendulum)        
 
     def _draw_frame(self, i: int) -> None:
         super()._draw_frame(i)
@@ -67,15 +71,67 @@ class CartAndPendulumAnimation(CartAnimation):
     def _draw_pendulum(self, i: int) -> None:
         pendulumX1 = self.x[i]
         pendulumY1 = 0
+        for j, pen in enumerate(self.pendulums):
+            pendulumX2 = pendulumX1 + self.pendulumLength * np.sin(self.theta[j][i])
+            pendulumY2 = pendulumY1 + self.pendulumLength * np.cos(self.theta[j][i])
+            pen.set_data([pendulumX1, pendulumX2], [-pendulumY1, -pendulumY2])
+            pendulumX1 = pendulumX2
+            pendulumY1 = pendulumY2
 
-        pendulumX2 = pendulumX1 + self.pendulumLength * np.sin(self.theta[i])
-        pendulumY2 = pendulumY1 + self.pendulumLength * np.cos(self.theta[i])
+class ResultsPlotter:
+    def plotx(sol:list) -> None:
+        t = sol.t
+        x = sol.y[0]
+        plt.plot(t, x, label='x')
+        plt.xlabel('Time')
+        plt.ylabel('Position')
+        plt.title('Position vs Time')
+        plt.show()
 
-        self.pendulum.set_data([pendulumX1, pendulumX2], [-pendulumY1, -pendulumY2])
+    def plotEnergy(sol:list, cartParameters: dict) -> None:
+        T = []
+        V = []
+        E = []
 
-def plotResults(t, x: list) -> None:
-    plt.plot(t, x, label='x')
-    plt.xlabel('Time')
-    plt.ylabel('Position')
-    plt.title('Position vs Time')
-    plt.show()
+        M = cartParameters['M']
+        k = cartParameters['k']
+
+        if cartParameters['dof'] >= 2:
+            m = cartParameters['m']
+            L = cartParameters['L']
+            g = cartParameters['g']
+            I = 1 / 12 * m * L**2
+            r = L / 2
+
+        for i in range(len(sol.t)):
+            x = sol.y[0][i]
+            x_dot = sol.y[1][i]
+
+            T.append(0.5 * M * x_dot**2)
+            V.append(0.5 * k * x**2)
+            E.append(T[i] + V[i])
+
+            if cartParameters['dof'] >= 2:
+                theta = sol.y[2][i]
+                theta_dot = sol.y[3][i]
+
+                T[i] += 0.5 * m * (x_dot**2 + r**2 * theta_dot**2 + 2 * r * x_dot * theta_dot * np.cos(theta)) + 0.5 * I * theta_dot**2
+                V[i] += (-m * g * r * np.cos(theta))
+                E[i] = (T[i] + V[i])
+
+            if cartParameters['dof'] >= 3:
+                theta2 = sol.y[4][i]
+                theta2_dot = sol.y[5][i]
+
+                T[i] += 0.5 * m * ((x_dot + L * theta_dot * np.cos(theta) + r * theta2_dot * np.cos(theta2))**2 + (L * theta_dot * np.sin(theta) + r * theta2_dot * np.sin(theta2))**2 + 0.5 * I * theta2_dot**2)
+                V[i] += (-m * g * L * np.cos(theta) - m * g * r * np.cos(theta2))
+                E[i] = (T[i] + V[i])
+
+        plt.plot(sol.t, T, label='Kinetic Energy')
+        plt.plot(sol.t, V, label='Potential Energy')
+        plt.plot(sol.t, E, label='Total Energy')
+        plt.xlabel('Time')
+        plt.ylabel('Energy')
+        plt.title('Energy vs Time')
+        plt.legend()
+        plt.show()

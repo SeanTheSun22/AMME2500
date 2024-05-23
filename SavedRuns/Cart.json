@@ -1,9 +1,9 @@
 {
     "dof": 1,
-    "initialConditions": [0, 0],
+    "initialConditions": [5, 0],
     "M": 10,
     "k": 20,
-    "c": 10,
-    "A": 100,
+    "c": 0,
+    "A": 0,
     "f": 2
 }
