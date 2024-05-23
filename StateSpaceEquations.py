@@ -145,4 +145,5 @@ class StateSpaceEquations:
 
         x = np.linalg.solve(A, b)
 
+        print(t)
         return [x2, x[0], th2, x[1], th4, x[2]]

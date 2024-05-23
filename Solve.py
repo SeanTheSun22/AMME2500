@@ -5,9 +5,13 @@ from StateSpaceEquations import StateSpaceEquations
 from scipy.integrate import solve_ivp
 import numpy as np
 
-tStart, tEnd = 0, 100
+tStart, tEnd = 0, 40
 tSpan = [tStart, tEnd]
-filename = "DoublePendulum"
+
+# CONFIG FILE WITH ALL PARAMETERS NO NEED TO CHANGE ANYTHING ELSE EXCEPT TEND
+# CLOSE THE FIGURE POP UPS TO START MODEL AND AFTER CLOSING ANIMATION IT WILL 
+# SAVE TO SAVEDVIDEOS
+filename = "DoublePendulumNoExternal"
 
 stateSpace = StateSpaceEquations(os.path.join("SavedRuns", filename) + ".json")
 
