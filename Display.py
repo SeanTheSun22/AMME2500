@@ -79,13 +79,21 @@ class CartAndPendulumAnimation(CartAnimation):
             pendulumY1 = pendulumY2
 
 class ResultsPlotter:
-    def plotx(sol:list) -> None:
+    def plotValues(sol:list) -> None:
         t = sol.t
         x = sol.y[0]
-        plt.plot(t, x, label='x')
-        plt.xlabel('Time')
-        plt.ylabel('Position')
-        plt.title('Position vs Time')
+        theta = sol.y[2]
+
+        fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(12,4))
+
+        ax1.set_title('Cart and Pendulum Motion')
+        ax1.plot(t, x)
+        ax1.set_ylabel('x')
+
+        ax2.plot(t, theta)
+        ax2.set_xlabel('Time')
+        ax2.set_ylabel('theta')
+
         plt.show()
 
     def plotEnergy(sol:list, cartParameters: dict) -> None:
