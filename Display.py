@@ -124,7 +124,7 @@ class ResultsPlotter:
                 theta_dot = sol.y[3][i]
 
                 T[i] += 0.5 * m * (x_dot**2 + r**2 * theta_dot**2 + 2 * r * x_dot * theta_dot * np.cos(theta)) + 0.5 * I * theta_dot**2
-                V[i] += (-m * g * r * np.cos(theta))
+                V[i] += (m * g * (r - r * np.cos(theta)))
                 E[i] = (T[i] + V[i])
 
             if cartParameters['dof'] >= 3:
@@ -132,9 +132,9 @@ class ResultsPlotter:
                 theta2_dot = sol.y[5][i]
 
                 T[i] += 0.5 * m * ((x_dot + L * theta_dot * np.cos(theta) + r * theta2_dot * np.cos(theta2))**2 + (L * theta_dot * np.sin(theta) + r * theta2_dot * np.sin(theta2))**2 + 0.5 * I * theta2_dot**2)
-                V[i] += (-m * g * L * np.cos(theta) - m * g * r * np.cos(theta2))
+                V[i] += m * g * (L - L * np.cos(theta)) + m * g * (r - r * np.cos(theta2))
                 E[i] = (T[i] + V[i])
-
+        plt.figure(figsize=(12, 2))
         plt.plot(sol.t, T, label='Kinetic Energy')
         plt.plot(sol.t, V, label='Potential Energy')
         plt.plot(sol.t, E, label='Total Energy')
