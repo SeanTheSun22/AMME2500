@@ -11,7 +11,7 @@ tSpan = [tStart, tEnd]
 # CONFIG FILE WITH ALL PARAMETERS NO NEED TO CHANGE ANYTHING ELSE EXCEPT TEND
 # CLOSE THE FIGURE POP UPS TO START MODEL AND AFTER CLOSING ANIMATION IT WILL 
 # SAVE TO SAVEDVIDEOS
-filename = "Q4Non"
+filename = "Q3Non"
 
 stateSpace = StateSpaceEquations(os.path.join("SavedRuns", filename) + ".json")
 
