@@ -106,6 +106,27 @@ class ResultsPlotter:
 
         plt.show()
 
+    def plot3dofValues(sol:list) -> None:
+        t = sol.t
+        x = sol.y[0]
+        theta1 = sol.y[2]
+        theta2 = sol.y[4]
+
+        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(12,6))
+
+        ax1.set_title('Cart and Double Pendulum Motion')
+        ax1.plot(t, x)
+        ax1.set_ylabel('x')
+
+        ax2.plot(t, theta1)
+        ax2.set_ylabel('theta1')
+
+        ax3.plot(t, theta2)
+        ax3.set_xlabel('Time')
+        ax3.set_ylabel('theta2')
+
+        plt.show()
+
     def plotEnergy(sol:list, cartParameters: dict) -> None:
         T = []
         V = []

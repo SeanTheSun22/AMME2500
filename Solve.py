@@ -11,7 +11,7 @@ tSpan = [tStart, tEnd]
 # CONFIG FILE WITH ALL PARAMETERS NO NEED TO CHANGE ANYTHING ELSE EXCEPT TEND
 # CLOSE THE FIGURE POP UPS TO START MODEL AND AFTER CLOSING ANIMATION IT WILL 
 # SAVE TO SAVEDVIDEOS
-filename = "DoublePendulumNoExternal"
+filename = "ResonantLargeDoublePendulum"
 
 stateSpace = StateSpaceEquations(os.path.join("SavedRuns", filename) + ".json")
 
@@ -21,8 +21,7 @@ sol = solve_ivp(stateSpace.oscillation(),
                 method='RK45', 
                 t_eval=np.linspace(tStart, tEnd, 1001))
 
-ResultsPlotter.plotValues(sol)
-ResultsPlotter.plotx(sol)
+ResultsPlotter.plot3dofValues(sol)
 ResultsPlotter.plotEnergy(sol, stateSpace.getParameters())
 
 if stateSpace.dof == 1:
