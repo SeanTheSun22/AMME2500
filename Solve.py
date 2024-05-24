@@ -5,13 +5,13 @@ from StateSpaceEquations import StateSpaceEquations
 from scipy.integrate import solve_ivp
 import numpy as np
 
-tStart, tEnd = 0, 40
+tStart, tEnd = 0, 100
 tSpan = [tStart, tEnd]
 
 # CONFIG FILE WITH ALL PARAMETERS NO NEED TO CHANGE ANYTHING ELSE EXCEPT TEND
 # CLOSE THE FIGURE POP UPS TO START MODEL AND AFTER CLOSING ANIMATION IT WILL 
 # SAVE TO SAVEDVIDEOS
-filename = "Q3"
+filename = "DoublePendulumNoExternal"
 
 stateSpace = StateSpaceEquations(os.path.join("SavedRuns", filename) + ".json")
 
@@ -22,6 +22,7 @@ sol = solve_ivp(stateSpace.oscillation(),
                 t_eval=np.linspace(tStart, tEnd, 1001))
 
 ResultsPlotter.plotValues(sol)
+ResultsPlotter.plotx(sol)
 ResultsPlotter.plotEnergy(sol, stateSpace.getParameters())
 
 if stateSpace.dof == 1:

@@ -79,6 +79,16 @@ class CartAndPendulumAnimation(CartAnimation):
             pendulumY1 = pendulumY2
 
 class ResultsPlotter:
+    def plotx(sol:list) -> None:
+        t = sol.t
+        x = sol.y[0]
+
+        plt.plot(t, x)
+        plt.xlabel('Time')
+        plt.ylabel('x')
+        plt.title('Cart Position vs Time')
+        plt.show()
+
     def plotValues(sol:list) -> None:
         t = sol.t
         x = sol.y[0]
@@ -134,7 +144,7 @@ class ResultsPlotter:
                 T[i] += 0.5 * m * ((x_dot + L * theta_dot * np.cos(theta) + r * theta2_dot * np.cos(theta2))**2 + (L * theta_dot * np.sin(theta) + r * theta2_dot * np.sin(theta2))**2 + 0.5 * I * theta2_dot**2)
                 V[i] += m * g * (L - L * np.cos(theta)) + m * g * (r - r * np.cos(theta2))
                 E[i] = (T[i] + V[i])
-        plt.figure(figsize=(12, 2))
+        #plt.figure(figsize=(12, 2))
         plt.plot(sol.t, T, label='Kinetic Energy')
         plt.plot(sol.t, V, label='Potential Energy')
         plt.plot(sol.t, E, label='Total Energy')
